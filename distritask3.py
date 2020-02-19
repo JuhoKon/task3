@@ -12,30 +12,30 @@ import asyncio
 from termcolor import colored
 
 
-def processes(linksFirstPart, linksSecondPart, linksThirdPart, linksFourthPart, linksFifthPart, Q, start, end, return_list, run):
+def processes(linksFirstPart, linksSecondPart, linksThirdPart, linksFourthPart, linksFifthPart, Q, start, end, return_list, run, path):
     p1 = Process(target=pythonSlave.find_shortest_path,
                  args=(linksFirstPart, Q, start,
-                       end, return_list, 'Worker 1', run))
+                       end, return_list, 'Worker 1', run, path))
     p1.start()
 
     p2 = Process(target=pythonSlave.find_shortest_path,
                  args=(linksSecondPart, Q, start,
-                       end, return_list, 'Worker 2', run))
+                       end, return_list, 'Worker 2', run, path))
     p2.start()
 
     p3 = Process(target=pythonSlave.find_shortest_path,
                  args=(linksThirdPart, Q, start,
-                       end, return_list, 'Worker 3', run))
+                       end, return_list, 'Worker 3', run, path))
     p3.start()
 
     p4 = Process(target=pythonSlave.find_shortest_path,
                  args=(linksFourthPart, Q, start,
-                       end, return_list, 'Worker 4', run))
+                       end, return_list, 'Worker 4', run, path))
     p4.start()
 
     p5 = Process(target=pythonSlave.find_shortest_path,
                  args=(linksFifthPart, Q, start,
-                       end, return_list, 'Worker 5', run))
+                       end, return_list, 'Worker 5', run, path))
     p5.start()
 
     p1.join()
@@ -86,9 +86,11 @@ def main(start, end):
     linksFifthPart = links[4*a:]
     Q = deque(
         [start])
+
+    # start shit
     starttime = time.time()
     processes(linksFirstPart, linksSecondPart,
-              linksThirdPart, linksFourthPart, linksFifthPart, Q, start, end, return_list, run)
+              linksThirdPart, linksFourthPart, linksFifthPart, Q, start, end, return_list, run, path)
     endtime = time.time()
     totalTime = endtime-starttime
     printHelper(return_list, totalTime)
@@ -99,6 +101,8 @@ def main2(start, end):
     manager = multiprocessing.Manager()
     return_list = manager.list()
     run = manager.Value('i', True)
+    path = manager.dict()
+    path[start] = [start]
 
     Q = deque([start])
 
@@ -106,7 +110,7 @@ def main2(start, end):
 
     starttime = time.time()
     p1 = Process(target=pythonSlave.find_shortest_path,
-                 args=(links, Q, start, end, return_list, 'process test',  run))
+                 args=(links, Q, start, end, return_list, 'Only 1 worker', run, path))
     p1.start()
     p1.join()
     endtime = time.time()
@@ -117,6 +121,6 @@ def main2(start, end):
 if __name__ == '__main__':
 
     start = "https://en.wikipedia.org/wiki/Airplane"
-    end = "https://en.wikipedia.org/wiki/Car"
+    end = "https://en.wikipedia.org/wiki/Royal_Air_Force"
     main(start, end)
     main2(start, end)

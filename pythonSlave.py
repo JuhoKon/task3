@@ -9,31 +9,27 @@ from termcolor import colored
 from multiprocessing import Process, Manager, Value
 
 
-def find_shortest_path(links, Q, start, end, return_list, process, run):
+def find_shortest_path(links, Q, start, end, return_list, worker, run, path):
   # breadth first - search
-    print(process + " started. Finding shortest path...")
+    print(worker + " started. Finding shortest path...")
     i = 0
-    # (run.value)
-    # run = True
-    # print((links))
-    path = {}
-    path[start] = [start]
-    page = Q[0]
+
+    #path = {}
+    #path[start] = [start]
+    page = start
     while (run.value):
         # look at next page in queue of pages to visit, get wikilinks from that page
         if i != 0:  # we are given list so at first iteration don't get new links
             page = Q.popleft()
             links = get_links(page)
-
         # look at each link on the page
-        # print(len(links))
-        for link in links:
 
+        for link in links:
             # if link is our destination, we're done!
             if link == end:
                 # link is end.
-                print(process + " : " + colored("Found a way to our destination...",
-                                                'green'))
+                print(worker + " : " + colored("Found a way to our destination...",
+                                               'green'))
                 return_list.append(path[page] + [link])
                 run.value = False
                 # print(run)
@@ -42,14 +38,14 @@ def find_shortest_path(links, Q, start, end, return_list, process, run):
             # if we don't, we need to record the path and add the link to our queue of pages to explore
             if (link not in path) and (link != page):
                 path[link] = path[page] + [link]
-                if i == 0:
+                if i == 0:  # first iteration
                     Q.append(link)  # adds to right side
                     Q.popleft()  # pop left, has the [start] in it
-                    i = 1
+                    i = 1  # conditional helper
 
                 Q.append(link)
 
-    print(process + " returning.")
+    print(worker + " returning.")
     return None
 
 
