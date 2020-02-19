@@ -10,12 +10,17 @@ from multiprocessing import Process, Manager, Value
 
 
 def find_shortest_path(links, Q, start, end, return_list, worker, run, path):
-  # breadth first - search
+  # breadth-first search, first found entry is shortest
+  # first process to find entry has the shortest based on the algorithm logic and that
+  # each process gets the same resources
+  # First process to find entry will stop other processes searching
+
+  # Breadth-first search
+  # https://en.wikipedia.org/wiki/Breadth-first_search
+  # https://github.com/stong1108/WikiRacer/blob/master/wikiracer.py
     print(worker + " started. Finding shortest path...")
     i = 0
 
-    #path = {}
-    #path[start] = [start]
     page = start
     while (run.value):
         # look at next page in queue of pages to visit, get wikilinks from that page
@@ -23,20 +28,20 @@ def find_shortest_path(links, Q, start, end, return_list, worker, run, path):
             page = Q.popleft()
             links = get_links(page)
         # look at each link on the page
-
         for link in links:
-            # if link is our destination, we're done!
-            if link == end:
-                # link is end.
+            if link == end:  # if found our destination
+                # breadth first search so first entry is the shortest
                 print(worker + " : " + colored("Found a way to our destination...",
                                                'green'))
                 return_list.append(path[page] + [link])
+
                 run.value = False
                 # print(run)
                 return return_list
             # if not, check if we already have a record of the shortest path from the start page to this link-
             # if we don't, we need to record the path and add the link to our queue of pages to explore
             if (link not in path) and (link != page):
+                # add current path to searched page + this link
                 path[link] = path[page] + [link]
                 if i == 0:  # first iteration
                     Q.append(link)  # adds to right side

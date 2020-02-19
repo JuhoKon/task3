@@ -68,7 +68,7 @@ def printHelper(return_list, totalTime):
 
 
 def main(start, end):
-    #run = Value('i', True)
+    # run = Value('i', True)
     manager = multiprocessing.Manager()
     return_list = manager.list()
     run = manager.Value('i', True)
@@ -83,11 +83,10 @@ def main(start, end):
     linksSecondPart = links[a:2*a]
     linksThirdPart = links[2*a:3*a]
     linksFourthPart = links[3*a:4*a]
-    linksFifthPart = links[4*a:]
+    linksFifthPart = links[4*a:]  # will have rest of the links
     Q = deque(
         [start])
-
-    # start shit
+    # start stuff
     starttime = time.time()
     processes(linksFirstPart, linksSecondPart,
               linksThirdPart, linksFourthPart, linksFifthPart, Q, start, end, return_list, run, path)
@@ -120,7 +119,7 @@ def main2(start, end):
 
 if __name__ == '__main__':
 
-    start = "https://en.wikipedia.org/wiki/Airplane"
-    end = "https://en.wikipedia.org/wiki/Royal_Air_Force"
+    start = "https://en.wikipedia.org/wiki/Henri_Fertet"
+    end = "https://en.wikipedia.org/wiki/Catholic_Church"
     main(start, end)
     main2(start, end)
