@@ -56,7 +56,7 @@ def printHelper(return_list, totalTime):
             shortestEntry = a
 
     print("\nFound a way from: " +
-          colored(str(shortestEntry[0]), 'blue') + " to: " + colored(str(shortestEntry[shortest-1]), 'blue') + " with " + str(shortest-2) + " pages between.")
+          colored(str(shortestEntry[0]), 'blue') + " to: " + colored(str(shortestEntry[shortest-1]), 'blue') + " with " + str(shortest-2) + " pages in-between.")
 
     print(colored("\nShortest route: \n", 'blue', attrs=['bold']))
 
